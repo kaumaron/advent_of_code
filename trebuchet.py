@@ -25,16 +25,16 @@ nums = {
     'seven': 7,
     'eight': 8,
     'nine': 9,
-    1: 1,
-    2: 2,
-    3: 3,
-    4: 4,
-    5: 5,
-    6: 6,
-    7: 7,
-    8: 8,
-    9: 9,
-    0: 0
+    '1': 1,
+    '2': 2,
+    '3': 3,
+    '4': 4,
+    '5': 5,
+    '6': 6,
+    '7': 7,
+    '8': 8,
+    '9': 9,
+    '0': 0
 }
 
 def get_two_digit_num(input_str: str) -> int:
@@ -56,7 +56,7 @@ def format_numbers(input_str):
     max_idx = -1
     left = 0
     right = 0
-    for k, v in text_nums.items(): 
+    for k, v in nums.items(): 
         if input_str.find(k) > -1: 
             idx = input_str.find(k)
             if idx < min_idx:
@@ -70,38 +70,35 @@ def format_numbers(input_str):
 
 if __name__ == '__main__':
     if test:
-        if mode == 1:
-            test_cases = [
-                ('66vqnbtonefour2qpd', 62),
-                ('spone1ninendxnqxfqvh', 11),
-                ('96hfphsnpmbx6rv', 96),
-                ('ninesevensixsix5g', 55),
-                ('7jttgkv', 77),
-                ('3gfsnineqbbfsrgpgtcjone', 33),
-            ]
-
-        if mode == 2:
-            test_cases = [
-                ('66vqnbtonefour2qpd', 62),
-                ('spone1ninendxnqxfqvh', 19),
-                ('96hfphsnpmbx6rv', 96),
-                ('ninesevensixsix5g', 95),
-                ('7jttgkv', 77),
-                ('3gfsnineqbbfsrgpgtcjone', 31),
-            ]
-
-        total = sum([test[1] for test in test_cases])
-
-        print('\nsingle tests')
-        for test in test_cases:
-            print(get_two_digit_num(test[0]) == test[1])
+        total = 0
+        test_total = 0
         
-        print('\nsum test')
-        running = 0
-        for test in test_cases:
-            running += get_two_digit_num(test[0])
-        print(total == running)
-        quit()
+        if mode == 1:
+            with open(file=file) as f:
+                for line in f.readlines():
+                    line = line.split(' ')
+                    test_case, value = line[0], int(line[1])
+                    test_result = get_two_digit_num(test_case)
+                    total += test_result
+                    test_total += value
+                    if test_result != value:
+                        print(f'{test_case} failed.')
+        if mode == 2:
+            with open(file=file) as f:
+                for line in f.readlines():
+                    line = line.split(' ')
+                    test_case, value = line[0], int(line[1])
+                    test_result = format_numbers(test_case)
+                    total += test_result
+                    test_total += value
+                    if test_result != value:
+                        print(f'{test_case} failed.')
+
+        if total == test_total:
+            print('Total Value: Passed!')
+        else:
+            print(f'Total Value: Failed! {total} expected, {test_total} generated.')
+        quit() 
 
     if mode == 1:
         total = 0
