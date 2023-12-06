@@ -1,19 +1,31 @@
 import argparse
 
+# Input paths
+test_path = 'tests/'
+input_path = 'inputs/'
+file_ext = '.txt'
+
+# Parser for command line args
 parser = argparse.ArgumentParser(
                     prog='Trebuchet',
                     description='Sums values of calibration data for a trebuchet',
                     epilog='That is it.')
 parser.add_argument('-t', '--test',
                     action='store_true')
-parser.add_argument('-f', '--filename',
+parser.add_argument('-d', '--day',
                     action='store')
 parser.add_argument('-m', '--mode',
                     action='store', choices=['1','2'])
 args = parser.parse_args()
+
+# Assign command line args
 test = args.test
-file = args.filename
 mode = int(args.mode)
+filebase = f'day_{args.day}'
+if test:
+    file = test_path + filebase + f'_{int(mode)}' + file_ext
+else:
+    file = input_path + filebase + file_ext
 
 nums = {
     'one': 1,
