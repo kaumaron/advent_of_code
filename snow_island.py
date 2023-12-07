@@ -59,8 +59,8 @@ if __name__ == '__main__':
 
     # Parser for command line args
     parser = argparse.ArgumentParser(
-                        prog='Trebuchet',
-                        description='Sums values of calibration data for a trebuchet',
+                        prog='Snow Island',
+                        description='Maths some cubes',
                         epilog='That is it.')
     parser.add_argument('-t', '--test',
                         action='store_true')
