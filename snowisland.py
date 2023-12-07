@@ -6,26 +6,29 @@ reds = re.compile(r'(\d+)\s(?=red)')
 blues = re.compile(r'(\d+)\s(?=blue)')
 greens = re.compile(r'(\d+)\s(?=green)')
 
-def parse_line(line, max_red = 10, max_green = 10, max_blue = 10):
+def game_possible(line, max_red = 10, max_green = 10, max_blue = 10):
     line = line.split(':')
     game_num = int(game_id.search(line[0]).group())
 
     for game in line[1].split(';'):
-        try:
-            red = int(reds.search(game).group())
-        except:
-            red = 0
-        try:
-            green = int(greens.search(game).group())
-        except:
-            green = 0
-        try:
-            blue = int(blues.search(game).group())
-        except:
-            blue = 0
+        red, blue, green = parse_colors(game)
         if red > max_red or green > max_green or blue > max_blue:
             return 0
     return game_num
+
+def game_power(line):
+    max_red = 0
+    max_green = 0
+    max_blue = 0
+    for game in line.split(':')[1].split(';'):
+        red, blue, green = parse_colors(game)
+        if red > max_red:
+            max_red = red
+        if blue > max_blue:
+            max_blue = blue
+        if green > max_green:
+            max_green = green
+    return max_blue * max_red * max_green
 
 def max_colors(line):
     red = int(reds.search(line).group())
@@ -33,6 +36,20 @@ def max_colors(line):
     blue = int(blues.search(line).group())
     return red, green, blue
 
+def parse_colors(game):
+    try:
+        red = int(reds.search(game).group())
+    except:
+        red = 0
+    try:
+        green = int(greens.search(game).group())
+    except:
+        green = 0
+    try:
+        blue = int(blues.search(game).group())
+    except:
+        blue = 0
+    return red, blue, green
 
 if __name__ == '__main__':
     # Input paths
@@ -73,7 +90,7 @@ if __name__ == '__main__':
                     line = line.split('|')
 
                     true_value = int(line[1])
-                    test_value = parse_line(line[0], r, g, b)
+                    test_value = game_possible(line[0], r, g, b)
 
                     true_total += true_value
                     test_total += test_value
@@ -82,10 +99,20 @@ if __name__ == '__main__':
                         print(f'{line[0]} failed! {test_value} returned')
         if mode == 2:
             with open(file=file) as f:
+                r,g,b = max_colors(f.readline())
                 for line in f.readlines():
-                    line = line.split(' ')
-                    pass
+                    line = line.split('|')
 
+                    true_value = int(line[1])
+                    test_value = game_power(line[0])
+
+                    true_total += true_value
+                    test_total += test_value
+
+                    if test_value != true_value:
+                        print(f'{line[0]} failed! {test_value} returned')
+
+        # for all tests
         if true_total == test_total:
             print('Total Value: Passed!')
         else:
@@ -98,15 +125,16 @@ if __name__ == '__main__':
                 r,g,b = max_colors(f.readline())
                 for line in f.readlines():
                     line = line.split('|')
-                    true_total += parse_line(line[0], r, g, b)
+                    true_total += game_possible(line[0], r, g, b)
         print(true_total)
         quit()
     
     if mode == 2:
-        quit()
         true_total = 0
         with open(file=file) as f:
-            for line in f.readlines():
-                true_total += format_numbers(line)
+                r,g,b = max_colors(f.readline())
+                for line in f.readlines():
+                    line = line.split('|')
+                    true_total += game_power(line[0])
         print(true_total)
         quit()
