@@ -6,14 +6,34 @@ numbers = '0123456789'
 
 def symbol_mapper(arr_txt):
     symbol_map = {}
-    for r, row in enumerate(s): 
+    for r, row in enumerate(arr_txt): 
          for c, el in enumerate(row): 
              if el not in not_symbols: 
                  symbol_map[(r,c)] = el
     return list(symbol_map.keys())
 
 
+def part_mapper(arr_txt):
+    part_map = {}
+    for r, row in enumerate(arr_txt):
+        num = ''
+        for c, el in enumerate(row):
+            if el.isdigit():
+                num += el
+            if len(num) > 0 and not el.isdigit():
+                part_map[(r,c - 1)] = num
+                num = ''
+    return part_map#list(part_map.keys())
+
+
 def compute_neighbors(r,c, br, bc):
+    neighbors = []
+    for x in [-1, 0, 1]:
+        for y in [-1, 0, 1]:
+            neighbors.append((r+x, c+y))
+    return list(filter(lambda x: x[0] <= br and x[1] <= bc and x[0] >= 0 and x[1] >= 0, neighbors))
+
+def compute_neighbors2(r,c, br, bc):
     neighbors = []
     for x in [-1, 0, 1]:
         for y in [-1, 0, 1]:
@@ -92,6 +112,7 @@ if __name__ == '__main__':
                 for line in f.readlines():
                     arr_input.append(line)
                 bounds = (len(arr_input)-1, len(arr_input[0])-1)
+            test_list = part_mapper(arr_input)
 
 
                     
@@ -104,7 +125,7 @@ if __name__ == '__main__':
 
 
         # for all tests
-        test_sum = sum([int(val) for val in test_list])
+        #test_sum = sum([int(val) for val in test_list])
         if answer_list == test_list:
             print('Part List: Passed!')
         else:
